@@ -1,8 +1,8 @@
 # Experiment Report: Data Quality Impact on AI Agent
 
 **Student ID:** AI20K-XXXX
-**Name:** (Dien ten cua ban)
-**Date:** (Dien ngay thuc hien)
+**Name:** Nguyễn Minh Hiếu
+**Date:** 10/06/2026
 
 ---
 
@@ -12,8 +12,8 @@ Chay `agent_simulation.py` voi 2 bo du lieu va ghi lai ket qua:
 
 | Scenario | Agent Response | Accuracy (1-10) | Notes |
 |----------|----------------|-----------------|-------|
-| Clean Data (`processed_data.csv`) | (Ghi cau tra loi cua Agent) | | |
-| Garbage Data (`garbage_data.csv`) | (Ghi cau tra loi cua Agent) | | |
+| Clean Data (`processed_data.csv`) | Agent: Based on my data, the best choice is Laptop at $1200. | 9 | Tra loi dung, chon san pham electronics co gia cao nhat hop ly |
+| Garbage Data (`garbage_data.csv`) | Agent: Based on my data, the best choice is Nuclear Reactor at $999999. | 2 | Tra loi sai do outlier 999999 lam logic idxmax() chon nham |
 
 ---
 
@@ -21,15 +21,16 @@ Chay `agent_simulation.py` voi 2 bo du lieu va ghi lai ket qua:
 
 ### Tai sao Agent tra loi sai khi dung Garbage Data?
 
-(Viet nhan xet cua ban o day — it nhat 50 tu)
+Khi dung Garbage Data, Agent van chay duoc nhung tra loi sai hoan toan. Nguyen nhan chinh la du lieu chua nhieu loi chat luong ma pipeline ETL chua duoc ap dung de lam sach.
 
-(Hay phan tich cac van de nhu Duplicate IDs, wrong data types, outliers, null values
-va giai thich tai sao chung anh huong den ket qua cua Agent.)
+Duplicate ID (id=1 xuat hien 2 lan) lam Agent khong biet record nao la nguon dang tin cay. Wrong data type o cot price ("ten dollars" thay vi so) co the gay loi khi so sanh hoac lam lech ket qua tinh toan. Extreme outlier (Nuclear Reactor gia 999999) khien ham idxmax() chon san pham sai — day la loi ro nhat trong thi nghiem nay. Null values o id, category va price bang 0 cung co the lam crash hoac bo qua du lieu quan trong.
+
+Trong khi do, Clean Data da qua validate (loai gia <= 0, category rong), transform (Title Case, discounted_price) nen Agent tim dung subset Electronics va chon Laptop — ket qua hop ly nhat.
 
 ---
 
 ## 3. Ket luan
 
-**Quality Data > Quality Prompt?** (Dong y hay khong? Giai thich ngan gon.)
+**Quality Data > Quality Prompt?** Dong y.
 
-(Viet ket luan cua ban o day)
+Prompt chi dinh huong cau hoi, nhung Agent phu thuoc hoan toan vao du lieu CSV dau vao. Du prompt ro rang ("best electronic product"), neu du lieu co outlier, sai kieu hoac trung lap thi logic don gian cua Agent van tra loi sai hoac crash. ETL pipeline va data observability la buoc bat buoc truoc khi dua du lieu vao he thong AI.
